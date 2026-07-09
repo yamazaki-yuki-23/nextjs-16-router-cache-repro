@@ -50,13 +50,13 @@ npm run build && npm start
 同じ手順で、今度は一覧が3件に正しく更新される。
 
 > [!NOTE]
-> `next dev` では再現しません。`next build && next start`（本番ビルド）で確認してください。
+> このバグは `next dev` でも本番ビルドでも再現する。上の手順ではビルドで確認しているが、開発サーバーでも同じ挙動になる。
 
 ## 原因（概要）
 
 クライアント側でページキャッシュのキーを作るとき、
 `Object.fromEntries(new URLSearchParams(...))` を使っている箇所があり、
-同じキーが複数回現れると最後の値だけに潰れてしまいます。
+同じキーが複数回現れると前から順に上書きされ、末尾の値だけが残ってしまいます。
 
 - `?tag=react&tag=nextjs` → `{ tag: "nextjs" }`
 - `?tag=nextjs` → `{ tag: "nextjs" }`
